@@ -30,7 +30,7 @@ export default {
     };
   },
   mounted() {
-    fetch('static/mc_1.json')
+    fetch('static/mc1_t.json')
       .then(res => res.json())
       .then((out) => {
         this.reports = out.map(d => ({
