@@ -27,6 +27,7 @@
           </b-form-timepicker>
         </b-col>
       </b-row>
+      <Boxplot :bindingBox="dataBox"></Boxplot>
           <div>
             <label>Timeline</label>
             <b-form-input id="range-1" v-model="slider.value" type="range" min="0"
@@ -42,6 +43,7 @@
 
 <script>
 import crossfilter from 'crossfilter';
+import Boxplot from './components/Boxplot';
 
 // crossfilter data
 let cf;
@@ -53,6 +55,7 @@ let dlocation; // quartieri
 export default {
   name: 'App',
   components: {
+    Boxplot,
   },
   data() {
     return {
@@ -78,6 +81,7 @@ export default {
         selected: String,
         options: [],
       },
+      dataBox: [],
     };
   },
   mounted() {
@@ -134,6 +138,16 @@ export default {
           value.time <= this.time.valueend &&
           value.location === this.location.selected);
       }
+    functBox() {
+      this.dataBox = this.reportFilter.map(v => ({
+        power: v.power,
+        medical: v.medical,
+        buildings: v.buildings,
+        sewer_and_water: v.sewer_and_water,
+        roads_and_bridges: v.roads_and_bridges,
+        shake_intensity: v.shake_intensity,
+      }));
+    },
     sliderprop() {
       const parts1 = this.time.valuestart.split(':');
       const seconds1 = (parts1[0] * 3600) + (parts1[1] * 60);
@@ -158,6 +172,8 @@ export default {
       handler(newVal) {
         dTime.filter(newVal.value);
         this.refreshTime();
+        this.functBox();
+        this.sliderprop();
       },
       deep: true,
     },
@@ -165,6 +181,8 @@ export default {
       handler(newVal) {
         dDate.filter(newVal.value);
         this.refreshTime();
+        this.functBox();
+        this.sliderprop();
       },
       deep: true,
     },
@@ -172,6 +190,16 @@ export default {
       handler(newVal) {
         dlocation.filter(newVal.value);
         this.refreshTime();
+        this.functBox();
+        this.sliderprop();
+    slider: {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.slider.value = newVal;
+        }
+        this.refreshTime();
+        this.functBox();
+        this.sliderprop();
       },
       deep: true,
     },
