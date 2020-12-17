@@ -43,6 +43,8 @@
 
 <script>
 import crossfilter from 'crossfilter';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import * as d3 from 'd3';
 import Boxplot from './components/Boxplot';
 
 // crossfilter data
@@ -80,6 +82,36 @@ export default {
       location: {
         selected: String,
         options: [],
+      },
+      power: {
+        value: Number,
+        options: [],
+        mean: Number,
+      },
+      buildings: {
+        value: Number,
+        options: [],
+        mean: Number,
+      },
+      medical: {
+        value: Number,
+        options: [],
+        mean: Number,
+      },
+      sewer_and_water: {
+        value: Number,
+        options: [],
+        mean: Number,
+      },
+      roads_and_bridges: {
+        value: Number,
+        options: [],
+        mean: Number,
+      },
+      shake_intesity: {
+        value: Number,
+        options: [],
+        mean: Number,
       },
       dataBox: [],
     };
@@ -138,6 +170,13 @@ export default {
           value.time <= this.time.valueend &&
           value.location === this.location.selected);
       }
+      // data manipulation with d3
+      this.power.mean = d3.mean(this.reportFilter, d => d.power);
+      this.medical.mean = d3.mean(this.reportFilter, d => d.medical);
+      this.buildings.mean = d3.mean(this.reportFilter, d => d.buildings);
+      this.shake_intesity.mean = d3.mean(this.reportFilter, d => d.shake_intensity);
+      this.sewer_and_water.mean = d3.mean(this.reportFilter, d => d.sewer_and_water);
+      this.roads_and_bridges.mean = d3.mean(this.reportFilter, d => d.roads_and_bridges);
     functBox() {
       this.dataBox = this.reportFilter.map(v => ({
         power: v.power,
