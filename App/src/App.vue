@@ -21,6 +21,19 @@
           <h4>Select a timeframe</h4>
               <b-form-timepicker v-model="time.valuestart" locale="en"></b-form-timepicker>
               <b-form-timepicker v-model="time.valueend" locale="en"></b-form-timepicker>
+          <b-form-timepicker v-model="time.valuestart" locale="en" minutes-step="5">
+          </b-form-timepicker>
+          <b-form-timepicker v-model="time.valueend" locale="en" minutes-step="5">
+          </b-form-timepicker>
+        </b-col>
+      </b-row>
+          <div>
+            <label>Timeline</label>
+            <b-form-input id="range-1" v-model="slider.value" type="range" min="0"
+                          :max="finalstate"
+                          step="5"></b-form-input>
+            <div class="mt-2">hours: {{ slider.time }}</div>
+          </div>
         </b-col>
       </b-row>
     </b-container>
@@ -35,6 +48,7 @@ let cf;
 let dTime; // orario
 let dDate; // data
 let dlocation;
+let dlocation; // quartieri
 
 export default {
   name: 'App',
@@ -45,6 +59,11 @@ export default {
       reports: [],
       reportFilter: [],
 
+      finalstate: [],
+      slider: {
+        time: String,
+        value: 0,
+      },
       days: {
         options: [],
         value: String,
@@ -52,6 +71,7 @@ export default {
       time: {
         options: [],
         valuestart: '00:00:00',
+        valuestart: '00:05:00',
         valueend: '12:00:00',
       },
       location: {
@@ -102,7 +122,35 @@ export default {
         value.date === this.days.value &&
         value.time >= this.time.valuestart &&
         value.time <= this.time.valueend &&
+      if (this.pulsantinotimeseries === true) {
+        this.reportFilter = this.reports.filter(value =>
+          value.date === this.days.value &&
+        value.time === this.slider.time &&
         value.location === this.location.selected);
+      } else {
+        this.reportFilter = this.reports.filter(value =>
+          value.date === this.days.value &&
+          value.time >= this.time.valuestart &&
+          value.time <= this.time.valueend &&
+          value.location === this.location.selected);
+      }
+    sliderprop() {
+      const parts1 = this.time.valuestart.split(':');
+      const seconds1 = (parts1[0] * 3600) + (parts1[1] * 60);
+      const parts2 = this.time.valueend.split(':');
+      const seconds2 = (parts2[0] * 3600) + (parts2[1] * 60);
+      this.finalstate = Math.abs(seconds1 - seconds2) / 60;
+      const minutes = this.slider.value % 60;
+      const hours = Math.floor(this.slider.value / 60) + (parts1[0] * 1);
+      if (hours <= 9 && minutes > 9) {
+        this.slider.time = `0${hours}:${minutes}:00`;
+      } else if (hours > 9 && minutes <= 9) {
+        this.slider.time = `${hours}:0${minutes}:00`;
+      } else if (hours <= 9 && minutes <= 9) {
+        this.slider.time = `0${hours}:0${minutes}:00`;
+      } else {
+        this.slider.time = `${hours}:${minutes}:00`;
+      }
     },
   },
   watch: {
