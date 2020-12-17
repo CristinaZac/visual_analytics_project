@@ -13,21 +13,55 @@
             ></b-form-checkbox-group>
           </b-form-group>
           <b-form-group>
-            <h4>Select a neighborhood</h4>
+            <h4>Select a location</h4>
             <b-form-select v-model="location.selected" :options="location.options"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col>
           <h4>Select a timeframe</h4>
-              <b-form-timepicker v-model="time.valuestart" locale="en"></b-form-timepicker>
-              <b-form-timepicker v-model="time.valueend" locale="en"></b-form-timepicker>
           <b-form-timepicker v-model="time.valuestart" locale="en" minutes-step="5">
           </b-form-timepicker>
           <b-form-timepicker v-model="time.valueend" locale="en" minutes-step="5">
           </b-form-timepicker>
         </b-col>
       </b-row>
+      <b-row>
+        <b-col>
+          <b-card
+            border-variant="secondary"
+            header="Mean of damages per location"
+            header-border-variant="secondary"
+            align='left'>
+            <b-card-body>
+              <b-row>
+              <b-col>
+              <h5><b-icon icon="lightning"></b-icon> Power:
+                {{ power.mean.toPrecision(2) }} </h5>
+              <h5><b-icon icon="building"></b-icon> Buildings:
+                {{ buildings.mean.toPrecision(2) }} </h5>
+              <h5><b-icon icon="suit-heart"></b-icon> Medical:
+                {{ medical.mean.toPrecision(2) }} </h5>
+              <h5><b-icon icon="droplet"></b-icon> Sewer and water:
+                {{ sewer_and_water.mean.toPrecision(2) }} </h5>
+              <h5><b-icon icon="cone-striped"></b-icon> Roads and bridges:
+                {{ roads_and_bridges.mean.toPrecision(2) }} </h5>
+              <h5><b-icon icon="bullseye"></b-icon> Shake intensity:
+                {{ shake_intesity.mean.toPrecision(2) }} </h5>
+              </b-col>
+              <b-col>
+              <Piechart :bindingPie="dataPie"></Piechart>
+              </b-col>
+              </b-row>
+            </b-card-body>
+            <b-card-footer>
+              <h6>Number of reports: </h6>
+            </b-card-footer>
+          </b-card>
+        </b-col>
+      </b-row>
       <Boxplot :bindingBox="dataBox"></Boxplot>
+      <b-row>
+        <b-col>
           <div>
             <label>Timeline</label>
             <b-form-input id="range-1" v-model="slider.value" type="range" min="0"
@@ -46,25 +80,28 @@ import crossfilter from 'crossfilter';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as d3 from 'd3';
 import Boxplot from './components/Boxplot';
+import Piechart from './components/Piechart';
+
 
 // crossfilter data
 let cf;
 let dTime; // orario
 let dDate; // data
-let dlocation;
 let dlocation; // quartieri
 
 export default {
   name: 'App',
   components: {
     Boxplot,
+    Piechart,
   },
   data() {
     return {
       reports: [],
       reportFilter: [],
-
       finalstate: [],
+      // pulsantinotimeseries: false,
+      // TODO attivare pulsante per timeseries?
       slider: {
         time: String,
         value: 0,
@@ -75,7 +112,6 @@ export default {
       },
       time: {
         options: [],
-        valuestart: '00:00:00',
         valuestart: '00:05:00',
         valueend: '12:00:00',
       },
@@ -114,6 +150,7 @@ export default {
         mean: Number,
       },
       dataBox: [],
+      dataPie: [],
     };
   },
   mounted() {
@@ -154,10 +191,6 @@ export default {
 
   methods: {
     refreshTime() {
-      this.reportFilter = this.reports.filter(value =>
-        value.date === this.days.value &&
-        value.time >= this.time.valuestart &&
-        value.time <= this.time.valueend &&
       if (this.pulsantinotimeseries === true) {
         this.reportFilter = this.reports.filter(value =>
           value.date === this.days.value &&
@@ -177,6 +210,14 @@ export default {
       this.shake_intesity.mean = d3.mean(this.reportFilter, d => d.shake_intensity);
       this.sewer_and_water.mean = d3.mean(this.reportFilter, d => d.sewer_and_water);
       this.roads_and_bridges.mean = d3.mean(this.reportFilter, d => d.roads_and_bridges);
+      this.dataPie = [
+        this.power.mean,
+        this.medical.mean,
+        this.buildings.mean,
+        this.shake_intesity.mean,
+        this.sewer_and_water.mean,
+        this.roads_and_bridges.mean];
+    },
     functBox() {
       this.dataBox = this.reportFilter.map(v => ({
         power: v.power,
@@ -187,6 +228,22 @@ export default {
         shake_intensity: v.shake_intensity,
       }));
     },
+    functPie() {
+      /* this.dataPie = this.reportFilter.map(v => ({
+        power: v.power,
+        medical: v.medical,
+        buildings: v.buildings,
+        sewer_and_water: v.sewer_and_water,
+        roads_and_bridges: v.roads_and_bridges,
+        shake_intensity: v.shake_intensity,
+      })); */
+      // [
+      // this.power.mean,
+      // this.medical.mean,
+      // TODO aggiungere le altre medie delle variabili
+      // ];
+    },
+
     sliderprop() {
       const parts1 = this.time.valuestart.split(':');
       const seconds1 = (parts1[0] * 3600) + (parts1[1] * 60);
@@ -212,6 +269,7 @@ export default {
         dTime.filter(newVal.value);
         this.refreshTime();
         this.functBox();
+        // this.functPie();
         this.sliderprop();
       },
       deep: true,
@@ -221,6 +279,7 @@ export default {
         dDate.filter(newVal.value);
         this.refreshTime();
         this.functBox();
+        // this.functPie();
         this.sliderprop();
       },
       deep: true,
@@ -230,7 +289,11 @@ export default {
         dlocation.filter(newVal.value);
         this.refreshTime();
         this.functBox();
+        // this.functPie();
         this.sliderprop();
+      },
+      deep: true,
+    },
     slider: {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
@@ -238,6 +301,7 @@ export default {
         }
         this.refreshTime();
         this.functBox();
+        // this.functPie();
         this.sliderprop();
       },
       deep: true,
