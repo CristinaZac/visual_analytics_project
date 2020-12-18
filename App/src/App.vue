@@ -54,7 +54,7 @@
               </b-row>
             </b-card-body>
             <b-card-footer>
-              <h6>Number of reports: </h6>
+              <h6>Number of reports: {{ nReports }} </h6>
             </b-card-footer>
           </b-card>
         </b-col>
@@ -100,8 +100,9 @@ export default {
       reports: [],
       reportFilter: [],
       finalstate: [],
-      // pulsantinotimeseries: false,
+      pulsantinotimeseries: false,
       // TODO attivare pulsante per timeseries?
+      nReports: 0,
       slider: {
         time: String,
         value: 0,
@@ -112,7 +113,7 @@ export default {
       },
       time: {
         options: [],
-        valuestart: '00:05:00',
+        valuestart: '00:00:00',
         valueend: '12:00:00',
       },
       location: {
@@ -204,6 +205,7 @@ export default {
           value.location === this.location.selected);
       }
       // data manipulation with d3
+      this.nReports = this.reportFilter.length;
       this.power.mean = d3.mean(this.reportFilter, d => d.power);
       this.medical.mean = d3.mean(this.reportFilter, d => d.medical);
       this.buildings.mean = d3.mean(this.reportFilter, d => d.buildings);
@@ -228,8 +230,8 @@ export default {
         shake_intensity: v.shake_intensity,
       }));
     },
-    functPie() {
-      /* this.dataPie = this.reportFilter.map(v => ({
+    //  functPie() {
+    /* this.dataPie = this.reportFilter.map(v => ({
         power: v.power,
         medical: v.medical,
         buildings: v.buildings,
@@ -237,12 +239,11 @@ export default {
         roads_and_bridges: v.roads_and_bridges,
         shake_intensity: v.shake_intensity,
       })); */
-      // [
-      // this.power.mean,
-      // this.medical.mean,
-      // TODO aggiungere le altre medie delle variabili
-      // ];
-    },
+    // [
+    // this.power.mean,
+    // this.medical.mean,
+    // ];
+    // },
 
     sliderprop() {
       const parts1 = this.time.valuestart.split(':');

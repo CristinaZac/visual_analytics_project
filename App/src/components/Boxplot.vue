@@ -19,7 +19,7 @@ export default {
       type: 'box',
       name: 'Sewer and water',
       boxpoints: 'all',
-      jitter: 0.5,
+      jitter: 1,
       whiskerwidth: 0.2,
       fillcolor: 'cls',
       marker: {
@@ -35,7 +35,7 @@ export default {
       type: 'box',
       name: 'Power',
       boxpoints: 'all',
-      jitter: 0.5,
+      jitter: 1,
       whiskerwidth: 0.2,
       fillcolor: 'cls',
       marker: {
@@ -51,7 +51,7 @@ export default {
       type: 'box',
       name: 'Roads and bridges',
       boxpoints: 'all',
-      jitter: 0.5,
+      jitter: 1,
       whiskerwidth: 0.2,
       fillcolor: 'cls',
       marker: {
@@ -67,7 +67,7 @@ export default {
       type: 'box',
       name: 'Medical',
       boxpoints: 'all',
-      jitter: 0.5,
+      jitter: 1,
       whiskerwidth: 0.2,
       fillcolor: 'cls',
       marker: {
@@ -83,7 +83,7 @@ export default {
       type: 'box',
       name: 'Buildings',
       boxpoints: 'all',
-      jitter: 0.5,
+      jitter: 1,
       whiskerwidth: 0.2,
       fillcolor: 'cls',
       marker: {
@@ -99,7 +99,7 @@ export default {
       type: 'box',
       name: 'Shake intensity',
       boxpoints: 'all',
-      jitter: 0.5,
+      jitter: 1,
       whiskerwidth: 0.2,
       fillcolor: 'cls',
       marker: {
