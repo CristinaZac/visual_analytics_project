@@ -14,7 +14,8 @@
           </b-form-group>
           <b-form-group>
             <h4>Select a location</h4>
-            <b-form-select v-model="location.selected" :options="location.options"></b-form-select>
+            <b-form-select v-model="location.selected" :options="location.options">
+            </b-form-select>
           </b-form-group>
         </b-col>
         <b-col>
@@ -29,7 +30,7 @@
         <b-col>
           <b-card
             border-variant="secondary"
-            header="Mean of damages per location"
+            header="Mean of damages"
             header-border-variant="secondary"
             align='left'>
             <b-card-body>
@@ -60,6 +61,15 @@
         </b-col>
       </b-row>
       <Boxplot :bindingBox="dataBox"></Boxplot>
+      <b-row>
+        <div>
+          <b-button :pressed.sync="myButtonTimeline" variant="secondary"
+                    @click="disable = !disable">
+            {{ disable ? 'Disable' : 'Enable' }} timeline
+          </b-button>
+          <p> <strong>{{ myButtonTimeline }}</strong></p>
+        </div>
+      </b-row>
       <b-row>
         <b-col>
           <div>
@@ -100,8 +110,8 @@ export default {
       reports: [],
       reportFilter: [],
       finalstate: [],
-      pulsantinotimeseries: false,
-      // TODO attivare pulsante per timeseries?
+      buttonTimeline: false,
+      disable: false,
       nReports: 0,
       slider: {
         time: String,
@@ -152,6 +162,16 @@ export default {
       },
       dataBox: [],
       dataPie: [],
+      myButtonTimeline: false,
+      buttons: [{
+        caption: 'Abilitate timeline',
+        state: true },
+      ],
+      computed: {
+        btnStates() {
+          return this.buttons.map(btn => btn.state);
+        },
+      },
     };
   },
   mounted() {
@@ -181,22 +201,31 @@ export default {
 
         // this.time.options = dDate_h.group().reduceCount().all().map(v => v.key);
         // this.time.value = this.time.options[0];
-        this.days.options = dDate
-          .group().reduceCount().all().map(v => v.key);
-        this.days.value = this.days.options[0];
+        this.days.options = ['All'].concat(dDate
+          .group().reduceCount().all().map(v => v.key));
         this.location.options = dlocation
           .group().reduceCount().all().map(v => v.key);
         this.location.selected = this.location.options[0];
+        this.days.value = this.days.options[0];
       });
   },
 
   methods: {
     refreshTime() {
-      if (this.pulsantinotimeseries === true) {
+      if (this.myButtonTimeline === true && this.days.value !== 'All') {
         this.reportFilter = this.reports.filter(value =>
           value.date === this.days.value &&
         value.time === this.slider.time &&
         value.location === this.location.selected);
+      } else if (this.myButtonTimeline === true && this.days.value === 'All') {
+        this.reportFilter = this.reports.filter(value =>
+          value.time === this.slider.time &&
+        value.location === this.location.selected);
+      } else if (this.days.value === 'All') {
+        this.reportFilter = this.reports.filter(value =>
+          value.time >= this.time.valuestart &&
+        value.time <= this.time.valueend &&
+          value.location === this.location.selected);
       } else {
         this.reportFilter = this.reports.filter(value =>
           value.date === this.days.value &&
@@ -263,6 +292,12 @@ export default {
         this.slider.time = `${hours}:${minutes}:00`;
       }
     },
+    /* selector() {
+      const all = this.reports;
+      if (this.days.value = all) {
+        // TODO opzioni all
+      }
+    }, */
   },
   watch: {
     time: {

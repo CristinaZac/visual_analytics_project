@@ -20,6 +20,9 @@ export default {
       labels: ['Power', 'Medical', 'Buildings', 'Shake intensity',
         'Sewer and water', 'Roads and bridges'],
       type: 'pie',
+      domain: {
+        x: [0, 0.85],
+      },
       marker: {
         colors: ['rgb(255,215,0)', 'rgb(60,179,113)', 'rgb(167, 93, 34)',
           'rgb(244,0,0)', 'rgb(0,191,255)', 'rgb(186,85,211)'],
@@ -28,6 +31,8 @@ export default {
     return {
       data: [data],
       layout: {
+        height: 400,
+        width: 550,
         font: {
           family: 'Avenir, sans-serif',
         },
