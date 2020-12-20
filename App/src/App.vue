@@ -24,6 +24,16 @@
           </b-form-timepicker>
           <b-form-timepicker v-model="time.valueend" locale="en" minutes-step="5">
           </b-form-timepicker>
+              <div>
+                <b-row>
+                <b-button block variant="secondary" id="buttonMap"
+                          v-b-toggle.collapse-2 class="m-3">
+                  Locations map</b-button>
+                <b-collapse block variant="secondary" id="collapse-2" class="mb-3">
+                  <b-card>I am collapsible content!</b-card>
+                </b-collapse>
+                </b-row>
+              </div>
         </b-col>
       </b-row>
       <b-row>
@@ -356,4 +366,6 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+
 </style>
