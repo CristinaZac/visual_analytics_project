@@ -70,6 +70,7 @@
           </b-card>
         </b-col>
       </b-row>
+      <Stackedbar></Stackedbar>
       <Boxplot :bindingBox="dataBox"></Boxplot>
       <b-row>
         <div>
@@ -101,7 +102,7 @@ import crossfilter from 'crossfilter';
 import * as d3 from 'd3';
 import Boxplot from './components/Boxplot';
 import Piechart from './components/Piechart';
-
+import Stackedbar from './components/Stackedbar';
 
 // crossfilter data
 let cf;
@@ -114,6 +115,7 @@ export default {
   components: {
     Boxplot,
     Piechart,
+    Stackedbar,
   },
   data() {
     return {
