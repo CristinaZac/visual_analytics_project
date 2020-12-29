@@ -57,7 +57,7 @@
               <h5><b-icon icon="cone-striped"></b-icon> Roads and bridges:
                 {{ roads_and_bridges.mean.toPrecision(2) }} </h5>
               <h5><b-icon icon="bullseye"></b-icon> Shake intensity:
-                {{ shake_intesity.mean.toPrecision(2) }} </h5>
+                {{ shake_intensity.mean.toPrecision(2) }} </h5>
               </b-col>
               <b-col>
               <Piechart :bindingPie="dataPie"></Piechart>
@@ -70,7 +70,7 @@
           </b-card>
         </b-col>
       </b-row>
-      <Stackedbar></Stackedbar>
+      <Stackedbar :bindingStacked="dataStacked"></Stackedbar>
       <Boxplot :bindingBox="dataBox"></Boxplot>
       <b-row>
         <div>
@@ -109,7 +109,7 @@ let cf;
 let dTime; // orario
 let dDate; // data
 let dlocation; // quartieri
-
+// TODO aggiungere mappa
 export default {
   name: 'App',
   components: {
@@ -121,6 +121,7 @@ export default {
     return {
       reports: [],
       reportFilter: [],
+      reportStackedFilter: [],
       finalstate: [],
       buttonTimeline: false,
       disable: false,
@@ -146,34 +147,41 @@ export default {
         value: Number,
         options: [],
         mean: Number,
+        mean_i: [],
       },
       buildings: {
         value: Number,
         options: [],
         mean: Number,
+        mean_i: [],
       },
       medical: {
         value: Number,
         options: [],
         mean: Number,
+        mean_i: [],
       },
       sewer_and_water: {
         value: Number,
         options: [],
         mean: Number,
+        mean_i: [],
       },
       roads_and_bridges: {
         value: Number,
         options: [],
         mean: Number,
+        mean_i: [],
       },
-      shake_intesity: {
+      shake_intensity: {
         value: Number,
         options: [],
         mean: Number,
+        mean_i: [],
       },
       dataBox: [],
       dataPie: [],
+      dataStacked: [],
       myButtonTimeline: false,
       buttons: [{
         caption: 'Abilitate timeline',
@@ -250,14 +258,14 @@ export default {
       this.power.mean = d3.mean(this.reportFilter, d => d.power);
       this.medical.mean = d3.mean(this.reportFilter, d => d.medical);
       this.buildings.mean = d3.mean(this.reportFilter, d => d.buildings);
-      this.shake_intesity.mean = d3.mean(this.reportFilter, d => d.shake_intensity);
+      this.shake_intensity.mean = d3.mean(this.reportFilter, d => d.shake_intensity);
       this.sewer_and_water.mean = d3.mean(this.reportFilter, d => d.sewer_and_water);
       this.roads_and_bridges.mean = d3.mean(this.reportFilter, d => d.roads_and_bridges);
       this.dataPie = [
         this.power.mean,
         this.medical.mean,
         this.buildings.mean,
-        this.shake_intesity.mean,
+        this.shake_intensity.mean,
         this.sewer_and_water.mean,
         this.roads_and_bridges.mean];
     },
@@ -310,6 +318,65 @@ export default {
         // TODO opzioni all
       }
     }, */
+    refreshStacked() {
+      if (this.myButtonTimeline === true && this.days.value !== 'All') {
+        this.reportStackedFilter = this.reports.filter(value =>
+          value.date === this.days.value &&
+          value.time === this.slider.time);
+      } else if (this.myButtonTimeline === true && this.days.value === 'All') {
+        this.reportStackedFilter = this.reports.filter(value =>
+          value.time === this.slider.time);
+      } else if (this.days.value === 'All') {
+        this.reportStackedFilter = this.reports.filter(value =>
+          value.time >= this.time.valuestart &&
+          value.time <= this.time.valueend);
+      } else {
+        this.reportStackedFilter = this.reports.filter(value =>
+          value.date === this.days.value &&
+          value.time >= this.time.valuestart &&
+          value.time <= this.time.valueend);
+      }
+      // data manipulation with d3
+      this.power.mean_i = [];
+      for (let i = 1; i < 20; i += 1) {
+        this.power.mean_i.push(d3.mean(this.reportStackedFilter
+          .filter(value => value.location === i), d => d.power));
+      }
+      this.medical.mean_i = [];
+      for (let i = 1; i < 20; i += 1) {
+        this.medical.mean_i.push(d3.mean(this.reportStackedFilter
+          .filter(value => value.location === i), d => d.medical));
+      }
+      this.sewer_and_water.mean_i = [];
+      for (let i = 1; i < 20; i += 1) {
+        this.sewer_and_water.mean_i.push(d3.mean(this.reportStackedFilter
+          .filter(value => value.location === i), d => d.sewer_and_water));
+      }
+      this.shake_intensity.mean_i = [];
+      for (let i = 1; i < 20; i += 1) {
+        this.shake_intensity.mean_i.push(d3.mean(this.reportStackedFilter
+          .filter(value => value.location === i), d => d.shake_intensity));
+      }
+      this.buildings.mean_i = [];
+      for (let i = 1; i < 20; i += 1) {
+        this.buildings.mean_i.push(d3.mean(this.reportStackedFilter
+          .filter(value => value.location === i), d => d.buildings));
+      }
+      this.roads_and_bridges.mean_i = [];
+      for (let i = 1; i < 20; i += 1) {
+        this.roads_and_bridges.mean_i.push(d3.mean(this.reportStackedFilter
+          .filter(value => value.location === i), d => d.roads_and_bridges));
+      }
+    },
+    functStacked() {
+      this.dataStacked = [
+        this.power.mean_i,
+        this.medical.mean_i,
+        this.buildings.mean_i,
+        this.shake_intensity.mean_i,
+        this.sewer_and_water.mean_i,
+        this.roads_and_bridges.mean_i];
+    },
   },
   watch: {
     time: {
@@ -319,6 +386,8 @@ export default {
         this.functBox();
         // this.functPie();
         this.sliderprop();
+        this.refreshStacked();
+        this.functStacked();
       },
       deep: true,
     },
@@ -329,6 +398,8 @@ export default {
         this.functBox();
         // this.functPie();
         this.sliderprop();
+        this.refreshStacked();
+        this.functStacked();
       },
       deep: true,
     },
@@ -351,6 +422,8 @@ export default {
         this.functBox();
         // this.functPie();
         this.sliderprop();
+        this.refreshStacked();
+        this.functStacked();
       },
       deep: true,
     },
