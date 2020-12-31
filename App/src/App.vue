@@ -28,18 +28,28 @@
                 <b-row>
                 <b-button block variant="secondary" id="buttonMap"
                           v-b-toggle.collapse-2 class="m-3">
-                  Locations map</b-button>
-                <b-collapse block variant="secondary" id="collapse-2" class="mb-3">
+                  St. Himark map</b-button>
                  <b-col>
-                    <b-card> I am collapsible content!
+                <b-collapse block variant="secondary" id="collapse-2" class="mb-3">
+                    <b-card border-variant="secondary">
+                      <h5> Map of St. Himark neighbourhoods</h5>
                       <b-col>
                         <b-card-body>
                             <img alt="Location map image" src="./assets/locationmap.png">
                         </b-card-body>
                       </b-col>
+                      <b-tabs card>
+                        <b-tab title="Pre-quake map" active>
+                          <img alt="prequake map image" src="./assets/mc1-prequake-shakemap.png">
+                        </b-tab>
+                        <b-tab title="Major quake map">
+                          <img alt="major quake map image"
+                               src="./assets/mc1-majorquake-shakemap.png">
+                        </b-tab>
+                      </b-tabs>
                     </b-card>
-                  </b-col>
                 </b-collapse>
+                  </b-col>
                 </b-row>
               </div>
         </b-col>
@@ -86,7 +96,7 @@
                     @click="disable = !disable">
             {{ disable ? 'Disable' : 'Enable' }} timeline
           </b-button>
-          <p> <strong>{{ myButtonTimeline }}</strong></p>
+<!--          <p> <strong>{{ myButtonTimeline }}</strong></p>-->
         </div>
       </b-row>
       <b-row>
