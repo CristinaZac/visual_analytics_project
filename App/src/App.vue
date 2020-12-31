@@ -30,7 +30,15 @@
                           v-b-toggle.collapse-2 class="m-3">
                   Locations map</b-button>
                 <b-collapse block variant="secondary" id="collapse-2" class="mb-3">
-                  <b-card>I am collapsible content!</b-card>
+                 <b-col>
+                    <b-card> I am collapsible content!
+                      <b-col>
+                        <b-card-body>
+                            <img alt="Location map image" src="./assets/locationmap.png">
+                        </b-card-body>
+                      </b-col>
+                    </b-card>
+                  </b-col>
                 </b-collapse>
                 </b-row>
               </div>

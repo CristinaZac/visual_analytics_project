@@ -130,8 +130,8 @@ export default {
           b: 80,
           t: 100,
         },
-        paper_bgcolor: 'rgb(250, 250, 250)',
-        plot_bgcolor: 'rgb(250, 250, 250)',
+        paper_bgcolor: 'rgb(255, 255, 255)',
+        plot_bgcolor: 'rgb(255, 255, 255)',
         font: {
           family: 'Avenir, sans-serif',
         },
