@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <h3 class="mb-3">Mini-Challenge 1</h3>
+    <h2 class="mb-4">Crowdsourcing for Situational Awareness</h2>
     <b-container class="bv-example-row">
       <b-row>
         <b-col>
@@ -10,6 +12,7 @@
               :options="days.options"
               name="buttons-1"
               buttons
+              button-variant="dark"
             ></b-form-checkbox-group>
           </b-form-group>
           <b-form-group>
@@ -26,9 +29,26 @@
           </b-form-timepicker>
               <div>
                 <b-row>
-                <b-button block variant="secondary" id="buttonMap"
-                          v-b-toggle.collapse-2 class="m-3">
-                  St. Himark map</b-button>
+                  <b-row class="w-100">
+                  <b-button-group class="mt-3 mb-3 ml-3 pl-3 w-100">
+                    <b-button variant="dark" class="pl-5 pr-5 w-100" v-b-toggle.sidebar-1>
+                      Data analysis</b-button>
+                    <b-button variant="dark" class="pr-5 pl-5 w-100" id="buttonMap"
+                              v-b-toggle.collapse-2> St. Himark map</b-button>
+                  </b-button-group>
+                  </b-row>
+                  <div class="p-0 bd-highlight">
+                    <b-sidebar id="sidebar-1" title="Sidebar" shadow>
+                      <div class="px-3 py-2">
+                        <p>Cras mattis consectetur purus sit amet fermentum.
+                          Cras justo odio, dapibus ac facilisis
+                          in, egestas eget quam. Morbi leo risus,
+                          porta ac consectetur ac, vestibulum at eros.
+                        </p>
+                        <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
+                      </div>
+                    </b-sidebar>
+                  </div>
                  <b-col>
                 <b-collapse block variant="secondary" id="collapse-2" class="mb-3">
                     <b-card border-variant="secondary">
@@ -92,7 +112,7 @@
       <Boxplot :bindingBox="dataBox"></Boxplot>
       <b-row>
         <div>
-          <b-button :pressed.sync="myButtonTimeline" variant="secondary"
+          <b-button :pressed.sync="myButtonTimeline" variant="dark" class="ml-3"
                     @click="disable = !disable">
             {{ disable ? 'Disable' : 'Enable' }} timeline
           </b-button>
