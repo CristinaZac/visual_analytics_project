@@ -38,21 +38,74 @@
                   </b-button-group>
                   </b-row>
                   <div class="p-0 bd-highlight">
-                    <b-sidebar id="sidebar-1" title="Sidebar" shadow>
+                    <b-sidebar id="sidebar-1" title="Data analysis" shadow>
                       <div class="px-3 py-2">
-                        <p>Cras mattis consectetur purus sit amet fermentum.
-                          Cras justo odio, dapibus ac facilisis
-                          in, egestas eget quam. Morbi leo risus,
-                          porta ac consectetur ac, vestibulum at eros.
+                        <p class="text-justify">
+                          This web app fulfills the purpose of representing and analyzing
+                          the data of the Vast Mini Challenge 1 in order to answer to the issues
+                          presented by the challenge. <br>
+                          The information analyzed are provided by the new damage reporting mobile
+                          application, which happened to be released shortly before St. Himark was
+                          hit by the earthquake. This app allows citizens to provide information
+                          about the damages occurred in relation to the earthquake, facilitating the
+                          hard work of the emergency services.
                         </p>
-                        <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
+                        <h6><strong>Answer 1</strong></h6>
+                        <p class="text-justify">
+                          The web app answers to the first question through the pie chart and the
+                          stacked bar chart. Indeed, the pie chart represents the mean of the
+                          damages plus the mean of the shake intensity, which is deemed to be
+                          fundamental data that needs to be taken into consideration along with
+                          the other information in order to find any discrepancy with the data
+                          provided by the citizens reports. <br>
+                          As it is possible to observe on the stacked bar chart the locations
+                          that were hit the hardest from April 6th to April 11th (considering a
+                          timeframe that goes from 12AM to 11PM), were: location 3 (which had
+                          the highest average of damages and shake intensity), 11, 9, 8, 10, and 14.
+                          Therefore it is essential to prioritize the neighborhoods that
+                          result in having a high average of damages since not every neighborhood
+                          that experienced a significant shake intensity reported a notable
+                          amount of them.
+                        </p>
+                        <h6><strong>Answer 2</strong></h6>
+                        <p class="text-justify">
+                          The second question is answered by the boxplot, which shows the
+                          reliability of the reports highlighting any possible outlier
+                          outside the boxplot whiskers. The bigger is the box and the
+                          highest is the number of outliers, the less reliable and consistent
+                          are the reports provided from that neighborhood. <br> Therefore,
+                          the neighborhoods that are stating the most reliable reports are
+                          those that represent the variables (medical, power, buildings and
+                          etc) in a reduced size of the box and a low to none
+                          number of outliers. <br>
+                          However, it is also crucial to take into account the number of reports
+                          submitted, indeed a considerable size of the box with an high number
+                          of reports could indicate low accuracy and reliability in the declared
+                          values. <br>
+                          Considering the previous timeframe and period, the neighborhoods that
+                          presented the most credible and thus reliable reports are 13 and 16.
+                        </p>
+                        <h6><strong>Answer 3</strong></h6>
+                        <p class="text-justify">
+                          The last question concerns the condition and uncertainty changes of
+                          the data. In order to examine the variations, the timeline and the
+                          boxplot were the most efficient tool to use.
+                          The results gathered show that there was a progressive increase in
+                          the amount of outliers as well as in the number of reports, especially
+                          from April 8th to April 9th, while the box size seems to remain modest.
+                          However, the last two days (April 10-11th) the reports show signs of a
+                          steady decrease. <br>
+                          Indeed the amount of outliers diminishes too, meanwhile there's an
+                          increase in the size of the box, indicating a significant scattering
+                          of the values.
+                        </p>
                       </div>
                     </b-sidebar>
                   </div>
                  <b-col>
                 <b-collapse block variant="secondary" id="collapse-2" class="mb-3">
                     <b-card border-variant="secondary">
-                      <h5> Map of St. Himark neighbourhoods</h5>
+                      <h5>Map of St. Himark neighbourhoods</h5>
                       <b-col>
                         <b-card-body>
                             <img alt="Location map image" src="./assets/locationmap.png">
@@ -60,9 +113,11 @@
                       </b-col>
                       <b-tabs card>
                         <b-tab title="Pre-quake map" active>
+                          <h6>The pre-quake map is from April 6th.</h6>
                           <img alt="prequake map image" src="./assets/mc1-prequake-shakemap.png">
                         </b-tab>
                         <b-tab title="Major quake map">
+                          <h6>The major quake map is from April 8th.</h6>
                           <img alt="major quake map image"
                                src="./assets/mc1-majorquake-shakemap.png">
                         </b-tab>
@@ -78,10 +133,10 @@
         <b-col>
           <b-card
             border-variant="secondary"
-            header="Mean of damages"
+            header="Mean of Damages"
             header-border-variant="secondary"
-            align='left'>
-            <b-card-body>
+            class="mb-3">
+            <b-card-body align="left">
               <b-row>
               <b-col>
               <h5><b-icon icon="lightning"></b-icon> Power:
@@ -102,17 +157,31 @@
               </b-col>
               </b-row>
             </b-card-body>
-            <b-card-footer>
+            <b-card-footer align="left">
               <h6>Number of reports: {{ nReports }} </h6>
             </b-card-footer>
           </b-card>
         </b-col>
       </b-row>
+      <b-card border-variant="secondary"
+              header="Stacked Bar Chart"
+              header-border-variant="secondary"
+      class="mb-3">
       <Stackedbar :bindingStacked="dataStacked"></Stackedbar>
+      </b-card>
+      <b-card border-variant="secondary"
+              header="Boxplot"
+              header-border-variant="secondary"
+              class="mb-3">
       <Boxplot :bindingBox="dataBox"></Boxplot>
+      </b-card>
+      <b-card border-variant="secondary"
+              header="Timeline Slider"
+              header-border-variant="secondary"
+              class="mb-3">
       <b-row>
         <div>
-          <b-button :pressed.sync="myButtonTimeline" variant="dark" class="ml-3"
+          <b-button :pressed.sync="myButtonTimeline" variant="dark" class="ml-3 mb-4"
                     @click="disable = !disable">
             {{ disable ? 'Disable' : 'Enable' }} timeline
           </b-button>
@@ -122,14 +191,15 @@
       <b-row>
         <b-col>
           <div>
-            <label>Timeline</label>
+<!--            <label class="mb-4">Timeline</label>-->
             <b-form-input id="range-1" v-model="slider.value" type="range" min="0"
                           :max="finalstate"
                           step="5"></b-form-input>
             <div class="mt-2">hours: {{ slider.time }}</div>
           </div>
         </b-col>
-      </b-row>
+        </b-row>
+      </b-card>
     </b-container>
   </div>
 </template>
