@@ -146,11 +146,6 @@ export default {
       this.data[3].y = item.map(d => d.medical);
       this.data[4].y = item.map(d => d.buildings);
       this.data[5].y = item.map(d => d.shake_intensity);
-      /*  this.$refs.Plotlychart.$on('click', (data) => {
-        for (let i = 0; i < data.points.length; i += 1) {
-          this.onchartclickname = data.points[0].x;
-        }
-      }); */
     },
   },
 };
